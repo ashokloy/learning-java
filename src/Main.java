@@ -1,6 +1,7 @@
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,7 +28,7 @@ public class Main {
         employeeList.add(new Employee(277, "Anuj Chettiar", 31, "Male", "Product Development", 2012, 35700.0));
 
         List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        List<String> words = Arrays.asList("apple", "banana", "cherry");
+        List<String> words = Arrays.asList("apple", "banana", "cherry", "date");
         List<List<String>> listOfLists = Arrays.asList(Arrays.asList("one","two"), Arrays.asList("three", "four"));
         List<Integer> numbersDup = Arrays.asList(1, 1, 2, 2, 3, 4);
         List<String> wordsTwo = Arrays.asList("John", "Aryan", "Bob");
@@ -59,8 +60,75 @@ public class Main {
         userFindAny(words);
         findMax(numbers);
         findMin(numbers);
-        convertToArray(words);*/
+        convertToArray(words);
         useJoiningBy(words);
+        usePartitioningBy(numbers);
+        useCounting(words);
+        useSummarizingInt(numbers);
+        useMapping(words);
+        useMappingOnEmployee(employeeList);
+        useJoining(words);
+        useGrouping(words);
+        useFiltering(numbers);
+        useCollectingAndThen(employeeList);
+        useMappingAgain(words);
+        createConcurrentMap(words);*/
+    }
+
+    private static void createConcurrentMap(List<String> words) {
+        System.out.println(words.stream().collect(Collectors.toConcurrentMap(Function.identity(), String::length)));
+    }
+
+    private static void useMappingAgain(List<String> words) {
+        IntSummaryStatistics summaryStatistics = words.stream().map(String::length).collect(Collectors.summarizingInt(Integer::intValue));
+        System.out.println(summaryStatistics.getSum()
+        );
+    }
+
+    private static void useCollectingAndThen(List<Employee> employeeList) {
+        List<String> empNameList = employeeList.stream().map(Employee::getName).collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        empNameList.forEach(System.out::println);
+    }
+
+    private static void useFiltering(List<Integer> numbers) {
+        List<Integer> filterList = numbers.stream().collect(Collectors.filtering(num -> num % 2 != 0, Collectors.toList()));
+        System.out.println(filterList);
+    }
+
+    private static void useGrouping(List<String> words) {
+        Map<Integer, Long> mapEle = words.stream().collect(Collectors.groupingBy(String::length, Collectors.counting()));
+        /*mapEle.forEach((k, v)-> System.out.println(k +": "+v));*/
+        System.out.println(mapEle);
+    }
+
+    private static void useJoining(List<String> words) {
+        System.out.println(words.stream().collect(Collectors.joining(", ", "{", "}")));
+    }
+
+    private static void useMappingOnEmployee(List<Employee> employeeList) {
+        List<String> listName = employeeList.stream().map(Employee::getName).collect(Collectors.toList());
+        System.out.println(listName);
+    }
+
+    private static void useMapping(List<String> words) {
+        List<Integer> sizeList = words.stream().collect(Collectors.mapping(String::length, Collectors.toList()));
+        System.out.println(sizeList);
+    }
+
+    private static void useSummarizingInt(List<Integer> numbers) {
+        IntSummaryStatistics summaryStatistics = numbers.stream().collect(Collectors.summarizingInt(Integer::intValue));
+        System.out.println(summaryStatistics);
+    }
+
+    private static void useCounting(List<String> words) {
+        long totalCount = words.stream().collect(Collectors.counting());
+        System.out.println(totalCount);
+    }
+
+    private static void usePartitioningBy(List<Integer> numbers) {
+        Map<Boolean, List<Integer>> partMap = numbers.stream().collect(Collectors.partitioningBy(n -> n % 2 == 0));
+        System.out.println("Even numbers: "+partMap.get(true));
+        System.out.println("Odd numbers: "+partMap.get(false));
     }
 
     private static void useJoiningBy(List<String> words) {
