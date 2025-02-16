@@ -3,6 +3,8 @@ HELP.md
 /target
 \.idea
 /.idea
+/out
+\out
 *.iml
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
